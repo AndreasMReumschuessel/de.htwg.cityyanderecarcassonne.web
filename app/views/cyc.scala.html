@@ -1,0 +1,13 @@
+@(tuiprint: String)
+
+@main("City Yandere Carcassonne") {
+    <script>
+            window.onload=toBottom;
+
+            function toBottom()
+            {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+    </script>
+    <code>@Html(tuiprint)</code>
+}
