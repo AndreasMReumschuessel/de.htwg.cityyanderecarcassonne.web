@@ -2,8 +2,11 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.CarcassonneWebController.index
+# More or less static pages
+GET     /                           controllers.PagesController.index
+GET     /rules                      controllers.PagesController.rules
 
+# Game pages
 GET     /cycarcassonne              controllers.CarcassonneWebController.cycarcassonne(cmd: String = "h")
 GET     /cycarcassonne/:cmd         controllers.CarcassonneWebController.cycarcassonne(cmd: String)
 
