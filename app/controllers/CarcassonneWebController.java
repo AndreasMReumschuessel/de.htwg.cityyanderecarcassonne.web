@@ -2,6 +2,8 @@ package controllers;
 
 import de.htwg.cityyanderecarcassonne.Carcassonne;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.cyc;
@@ -18,5 +20,11 @@ public class CarcassonneWebController extends Controller {
         tui.processInput(cmd);
         fullPrint += tui.getTuiString().replace("\n", "<br>").replace(" ", "&nbsp;") + "<br>";
         return ok(cyc.render(fullPrint));
+    }
+
+    public Result cycarcassonnePost() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        String cmd = dynamicForm.get("command");
+        return cycarcassonne(cmd);
     }
 }

@@ -9,5 +9,11 @@
                 window.scrollTo(0, document.body.scrollHeight);
             }
     </script>
-    <code>@Html(tuiprint)</code>
+    <font face="Consolas">
+        <code>@Html(tuiprint)</code>
+    </font>
+    @helper.form(action = routes.CarcassonneWebController.cycarcassonnePost()) {
+        <input type="text" name="command" autofocus />
+        <input type="submit" value="Send command" />
+    }
 }
