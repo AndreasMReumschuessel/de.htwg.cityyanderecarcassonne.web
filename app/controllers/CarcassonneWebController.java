@@ -1,6 +1,7 @@
 package controllers;
 
 import de.htwg.cityyanderecarcassonne.Carcassonne;
+import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -13,13 +14,13 @@ import views.html.index;
  * This controller passes the commands to the CityYandereCarcassonne game and returns the TUI.
  */
 public class CarcassonneWebController extends Controller {
-    private String fullPrint = "";
+    private static Carcassonne carcassonne = Carcassonne.getInstance(15, 15, false, true);
+    private static ICarcassonneController controller = carcassonne.getController();
 
     public Result cycarcassonne(String cmd) {
-        TextUI tui = Carcassonne.getInstance(15, 15, false, true).getTui();
+        TextUI tui = carcassonne.getTui();
         tui.processInput(cmd);
-        fullPrint += tui.getTuiString().replace("\n", "<br>").replace(" ", "&nbsp;") + "<br>";
-        return ok(cyc.render(fullPrint));
+        return ok(cyc.render(controller));
     }
 
     public Result cycarcassonnePost() {
