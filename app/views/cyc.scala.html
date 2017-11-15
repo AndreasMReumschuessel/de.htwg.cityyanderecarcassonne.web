@@ -1,19 +1,29 @@
-@(tuiprint: String)
+@(controller: de.htwg.cityyanderecarcassonne.controller.ICarcassonneController)
 
 @main("City Yandere Carcassonne") {
-    <script>
-            window.onload=toBottom;
+    <div class="game">
+        <div class="gamecontent">
+            <div class="townsquare">
 
-            function toBottom()
-            {
-                window.scrollTo(0, document.body.scrollHeight);
+            </div>
+            <div class="gameinfo">
+                <div class="currentcard">
+
+                </div>
+                <div class="playerpanel">
+                    <div class="player">
+                        @if((controller.getCurrentPlayer() != null) && (controller.getCurrentPlayer.getName() != null)) {
+                            @{"Current Player: " + controller.getCurrentPlayer().getName()}
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="textinput">
+            @helper.form(action = routes.CarcassonneWebController.cycarcassonnePost()) {
+                <input type="text" name="command" autofocus />
+                <input type="submit" value="Send command" />
             }
-    </script>
-    <font face="Consolas">
-        <code>@Html(tuiprint)</code>
-    </font>
-    @helper.form(action = routes.CarcassonneWebController.cycarcassonnePost()) {
-        <input type="text" name="command" autofocus />
-        <input type="submit" value="Send command" />
-    }
+        </div>
+    </div>
 }
