@@ -8,10 +8,10 @@
             <table cellpadding="10">
                 <tr>
                     <td>
-                        <a href="/cycarcassonne"><img src="@routes.Assets.versioned("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
+                        <a href="@routes.CarcassonneWebController.cycarcassonne("h")"><img src="@routes.Assets.versioned("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
                     </td>
                     <td>
-                        <a href="/cycarcassonne"><font size="6"><b>Play City Yandere Carcassonne!</b></font></a>
+                        <a href="@routes.CarcassonneWebController.cycarcassonne("h")"><font size="6"><b>Play City Yandere Carcassonne!</b></font></a>
                     </td>
                 </tr>
                 <tr>
@@ -19,7 +19,7 @@
                         <!-- HTML Ninja -->
                     </td>
                     <td>
-                        <font size="5"><a href="/rules">Game rules</a></font>
+                        <font size="5"><a href="@routes.PagesController.rules">Game rules</a></font>
                     </td>
                 </tr>
             </table>
