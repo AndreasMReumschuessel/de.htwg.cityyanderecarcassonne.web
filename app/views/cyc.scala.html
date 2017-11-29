@@ -1,19 +1,67 @@
-@(tuiprint: String)
+@(controller: de.htwg.cityyanderecarcassonne.controller.ICarcassonneController)
 
 @main("City Yandere Carcassonne") {
-    <script>
-            window.onload=toBottom;
-
-            function toBottom()
-            {
-                window.scrollTo(0, document.body.scrollHeight);
+    <div class="game">
+        <div class="gamecontent">
+            @if(controller.getTownsquare != null){
+                <div class="townsquare">
+                    @for(row <- 0 until controller.getDimensionY) {
+                        <div class="tsRow">
+                            @for(column <- 0 until controller.getDimensionX) {
+                                <span class="tsColumn" id="@({row + "_" + column})">
+                                    @if(controller.getTownsquare.getCard(column, row) != null) {
+                                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                                            var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName
+                                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
+                                            cardName
+                                        } + ".png")" />
+                                    }
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
             }
-    </script>
-    <font face="Consolas">
-        <code>@Html(tuiprint)</code>
-    </font>
-    @helper.form(action = routes.CarcassonneWebController.cycarcassonnePost()) {
-        <input type="text" name="command" autofocus />
-        <input type="submit" value="Send command" />
-    }
+            <div class="gameinfo">
+                <div class="currentcard">
+                    @if(controller.cardOnHand() != null) {
+                        Current card<br>
+                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                            var cardClassName = controller.cardOnHand.getClass.getName
+                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
+                            cardName
+                        } + ".png")" />
+                    }
+                </div>
+                <div class="cardsleft">
+                    Cards remaining: @(controller.getRemainingCards)
+                </div>
+                <div class="roundcontroller">
+                    <button id="roundctrl">Start Game</button>
+                </div>
+                <div class="rotator">
+                    <button id="rotleft">Rotate left</button><button id="rotright">Rotate right</button>
+                </div>
+                <div class="playerpanel">
+                    Player:
+                    @for(player <- controller.getPlayers) {
+                        <div class="player @if(player == controller.getCurrentPlayer) {active}">
+                        @if((player != null) && (player.getName != null)) {
+                            @{
+                                player.getSumMeeples + " : " + player.getName + " : " + player.getScore
+                            }
+                        }
+                        </div>
+                    }
+                    <button id="addplayer">Add Player!</button>
+                </div>
+            </div>
+        </div>
+        <div class="textinput">
+            @helper.form(action = routes.CarcassonneWebController.cycarcassonnePost()) {
+                <input type="text" name="command" autofocus />
+                <input type="submit" value="Send command" />
+            }
+        </div>
+    </div>
 }

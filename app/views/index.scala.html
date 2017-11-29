@@ -2,16 +2,16 @@
 
     @main("City Yandere Carcassonne") {
 
-        <center>
+        <div class="center">
             <h1>@message</h1>
             <img src="@routes.Assets.versioned("images/wow.gif")" border="0" alt="wow" />
             <table cellpadding="10">
                 <tr>
                     <td>
-                        <a href="/cycarcassonne"><img src="@routes.Assets.versioned("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
+                        <a href="@routes.CarcassonneWebController.cycarcassonne("h")"><img src="@routes.Assets.versioned("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
                     </td>
                     <td>
-                        <a href="/cycarcassonne"><font size="6"><b>Play City Yandere Carcassonne!</b></font></a>
+                        <a id="s1" href="@routes.CarcassonneWebController.cycarcassonne("h")"><b>Play City Yandere Carcassonne!</b></a>
                     </td>
                 </tr>
                 <tr>
@@ -19,7 +19,7 @@
                         <!-- HTML Ninja -->
                     </td>
                     <td>
-                        <font size="5"><a href="/rules">Game rules</a></font>
+                        <a id="s2" href="@routes.PagesController.rules">Game rules</a>
                     </td>
                 </tr>
             </table>
@@ -27,7 +27,6 @@
             <img src="@routes.Assets.versioned("images/cat.gif")"  border="0" alt="running cat" />
             <img src="@routes.Assets.versioned("images/cat.gif")"  border="0" alt="running cat" />
             <img src="@routes.Assets.versioned("images/cat.gif")"  border="0" alt="running cat" />
-
-        </center>
+        </div>
 
     }
