@@ -1,9 +1,9 @@
 @()
 <div class="navbar">
-    <a href="/">Home</a>
+    <a href="@routes.PagesController.index">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/cycarcassonne">Play City Yandere Carcassonne!</a>
+    <a href="@routes.CarcassonneWebController.cycarcassonne("h")">Play City Yandere Carcassonne!</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/rules">Game Rules</a>
+    <a href="@routes.PagesController.rules">Game Rules</a>
 </div>
 <hr>
