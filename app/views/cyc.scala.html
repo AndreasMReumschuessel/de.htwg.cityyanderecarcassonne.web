@@ -11,7 +11,7 @@
                                 <span class="tsColumn" id="@({row + "_" + column})">
                                     @if(controller.getTownsquare.getCard(column, row) != null) {
                                         <img src="@routes.Assets.versioned("cyc-data/" + {
-                                            var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName()
+                                            var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName
                                             var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
                                             cardName
                                         } + ".png")" />
@@ -27,7 +27,7 @@
                     @if(controller.cardOnHand() != null) {
                         Current card<br>
                         <img src="@routes.Assets.versioned("cyc-data/" + {
-                            var cardClassName = controller.cardOnHand.getClass.getName()
+                            var cardClassName = controller.cardOnHand.getClass.getName
                             var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
                             cardName
                         } + ".png")" />
@@ -40,13 +40,13 @@
                     <button id="roundctrl">Start Game</button>
                 </div>
                 <div class="rotator">
-                    <button id="rotleft">Rotate left</button id="rotright"><button>Rotate right</button>
+                    <button id="rotleft">Rotate left</button><button id="rotright">Rotate right</button>
                 </div>
                 <div class="playerpanel">
                     Player:
                     @for(player <- controller.getPlayers) {
                         <div class="player @if(player == controller.getCurrentPlayer) {active}">
-                        @if((player != null) && (player.getName() != null)) {
+                        @if((player != null) && (player.getName != null)) {
                             @{
                                 player.getSumMeeples + " : " + player.getName + " : " + player.getScore
                             }
