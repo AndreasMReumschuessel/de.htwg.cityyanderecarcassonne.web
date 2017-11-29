@@ -3,19 +3,57 @@
 @main("City Yandere Carcassonne") {
     <div class="game">
         <div class="gamecontent">
-            <div class="townsquare">
-
-            </div>
+            @if(controller.getTownsquare != null){
+                <div class="townsquare">
+                    @for(row <- 0 until controller.getDimensionY) {
+                        <div class="tsRow">
+                            @for(column <- 0 until controller.getDimensionX) {
+                                <span class="tsColumn" id="@({row + "_" + column})">
+                                    @if(controller.getTownsquare.getCard(column, row) != null) {
+                                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                                            var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName()
+                                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
+                                            cardName
+                                        } + ".png")" />
+                                    }
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
+            }
             <div class="gameinfo">
                 <div class="currentcard">
-
+                    @if(controller.cardOnHand() != null) {
+                        Current card<br>
+                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                            var cardClassName = controller.cardOnHand.getClass.getName()
+                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
+                            cardName
+                        } + ".png")" />
+                    }
+                </div>
+                <div class="cardsleft">
+                    Cards remaining: @(controller.getRemainingCards)
+                </div>
+                <div class="roundcontroller">
+                    <button id="roundctrl">Start Game</button>
+                </div>
+                <div class="rotator">
+                    <button id="rotleft">Rotate left</button id="rotright"><button>Rotate right</button>
                 </div>
                 <div class="playerpanel">
-                    <div class="player">
-                        @if((controller.getCurrentPlayer() != null) && (controller.getCurrentPlayer.getName() != null)) {
-                            @{"Current Player: " + controller.getCurrentPlayer().getName()}
+                    Player:
+                    @for(player <- controller.getPlayers) {
+                        <div class="player @if(player == controller.getCurrentPlayer) {active}">
+                        @if((player != null) && (player.getName() != null)) {
+                            @{
+                                player.getSumMeeples + " : " + player.getName + " : " + player.getScore
+                            }
                         }
-                    </div>
+                        </div>
+                    }
+                    <button id="addplayer">Add Player!</button>
                 </div>
             </div>
         </div>
