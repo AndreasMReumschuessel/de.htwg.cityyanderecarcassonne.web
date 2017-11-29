@@ -47,25 +47,30 @@ a {
 /* Game */
 .townsquare {
   font-size: 0;
-  float: left;
 }
 
 .tsColumn, .tsRow {
   img {
-    height: 70px;
-    width: 70px;
     padding: 0;
   }
 }
 
 .tsColumn {
-  height: 70px;
-  width: 70px;
   display: inline-block;
   background-color: lightgray;
 }
 
+@media all {
+  .tsColumn {
+    width: 5vw;
+    height: 5vw;
+  }
+}
+
 .gameinfo {
+  /*position: fixed;
+  right: 10px;
+  bottom: 10px;*/
   text-align: center;
   border: solid 1px;
   background-color: cornsilk;

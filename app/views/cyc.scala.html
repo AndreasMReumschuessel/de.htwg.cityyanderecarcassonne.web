@@ -2,31 +2,33 @@
 
 @main("City Yandere Carcassonne") {
     <div class="game">
-        <div class="gamecontent">
+        <div class="row gamecontent">
             @if(controller.getTownsquare != null){
-                <div class="townsquare">
+                <div class="col-xs-12 col-md-10 townsquare">
                     @for(row <- 0 until controller.getDimensionY) {
-                        <div class="tsRow">
+                        <div class="row">
+                        <div class="col-xs-12 tsRow">
                             @for(column <- 0 until controller.getDimensionX) {
-                                <span class="tsColumn" id="@({row + "_" + column})">
+                                <div class="tsColumn" id="@({row + "_" + column})">
                                     @if(controller.getTownsquare.getCard(column, row) != null) {
-                                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                                        <img class="img-responsive" src="@routes.Assets.versioned("cyc-data/" + {
                                             var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName
                                             var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
                                             cardName
                                         } + ".png")" />
                                     }
-                                </span>
+                                </div>
                             }
+                        </div>
                         </div>
                     }
                 </div>
             }
-            <div class="gameinfo">
+            <div class="col-xs-3 col-md-2 gameinfo">
                 <div class="currentcard">
                     @if(controller.cardOnHand() != null) {
                         Current card<br>
-                        <img src="@routes.Assets.versioned("cyc-data/" + {
+                        <img class="img-responsive" src="@routes.Assets.versioned("cyc-data/" + {
                             var cardClassName = controller.cardOnHand.getClass.getName
                             var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
                             cardName
