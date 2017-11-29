@@ -14,8 +14,8 @@ import views.html.index;
  * This controller passes the commands to the CityYandereCarcassonne game and returns the TUI.
  */
 public class CarcassonneWebController extends Controller {
-    private static Carcassonne carcassonne = Carcassonne.getInstance(15, 15, false, true);
-    private static ICarcassonneController controller = carcassonne.getController();
+    private final static Carcassonne carcassonne = Carcassonne.getInstance(15, 15, false, true);
+    private final static ICarcassonneController controller = carcassonne.getController();
 
     public Result cycarcassonne(String cmd) {
         TextUI tui = carcassonne.getTui();
