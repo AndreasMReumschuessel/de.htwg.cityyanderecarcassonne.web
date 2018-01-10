@@ -1,3 +1,6 @@
+$.getScript("/assets/javascripts/cyc.js", function() {
+});
+
 $(document).ready(function() {
     $('button#roundctrl').click(function(ev) {
         console.log('clicked', $( this ).text());
@@ -13,8 +16,4 @@ $(document).ready(function() {
     $('.modal').on('shown.bs.modal', function() {
         $(this).find('[autofocus]').focus();
     });
-
-    // ### Gamelogic ###
-    // Add a player
-
 });
