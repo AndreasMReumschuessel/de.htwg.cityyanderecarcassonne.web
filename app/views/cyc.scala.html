@@ -55,7 +55,7 @@
                         }
                         </div>
                     }
-                    <button id="addplayer">Add Player!</button>
+                    <button type="button" id="addplayer" class="btn btn-default" data-toggle="modal" data-target="#addPlayerModal">Add Player!</button>
                 </div>
             </div>
         </div>
@@ -64,6 +64,28 @@
                 <input type="text" name="command" autofocus />
                 <input type="submit" value="Send command" />
             }
+        </div>
+    </div>
+
+    <!-- AddPlayerModal -->
+    <div id="addPlayerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Let's add a new player!</h4>
+                </div>
+                <div class="modal-body">
+                    Name:&nbsp;
+                    <input type="text" id="playername" autofocus/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addplayerbtn" class="btn btn-default" data-dismiss="modal">Add Player</button>
+                </div>
+            </div>
+
         </div>
     </div>
 }
