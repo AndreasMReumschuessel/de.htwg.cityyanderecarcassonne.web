@@ -14,6 +14,7 @@ $('#addplayerbtn').click(function (ev) {
         dataType: "json",
         success: function(result){
             player.prepend(result.meeple + " : " + result.name + " : " + result.score);
+            $('#playername').prop("value", "");
             console.log("AJAX succeeded! Player name: " + result.meeple);
         }
     })
