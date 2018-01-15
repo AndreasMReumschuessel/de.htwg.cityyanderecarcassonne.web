@@ -2,7 +2,9 @@ package controllers;
 
 import de.htwg.cityyanderecarcassonne.Carcassonne;
 import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
+import de.htwg.cityyanderecarcassonne.model.IPlayer;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
+import models.Player;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -37,10 +39,23 @@ public class CarcassonneWebController extends Controller {
 
     public Result cycarcassonneJson(String cmd){
         execCmd(cmd);
-        return json(cmd);
+        return json();
     }
 
-    public Result json(String cmd) {
-        return ok(cmd);
+    public Result json() {
+        return ok();
+    }
+
+    public Result addPlayer(String name) {
+        controller.addPlayer(name);
+
+        IPlayer controllerPlayer = controller.getPlayers().get(controller.getPlayers().size() - 1);
+
+        Player jsonPlayer = new Player();
+        jsonPlayer.name = name;
+        jsonPlayer.meeple = controllerPlayer.getSumMeeples();
+        jsonPlayer.score = controllerPlayer.getScore();
+
+        return ok(Json.toJson(jsonPlayer));
     }
 }

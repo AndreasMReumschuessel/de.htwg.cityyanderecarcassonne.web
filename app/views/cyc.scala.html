@@ -46,15 +46,17 @@
                 </div>
                 <div class="playerpanel">
                     Player:
-                    @for(player <- controller.getPlayers) {
-                        <div class="player @if(player == controller.getCurrentPlayer) {active}">
-                        @if((player != null) && (player.getName != null)) {
-                            @{
-                                player.getSumMeeples + " : " + player.getName + " : " + player.getScore
+                    <div class="playerlist">
+                        @for(player <- controller.getPlayers) {
+                            <div class="player @if(player == controller.getCurrentPlayer) {active}">
+                            @if((player != null) && (player.getName != null)) {
+                                @{
+                                    player.getSumMeeples + " : " + player.getName + " : " + player.getScore
+                                }
                             }
+                            </div>
                         }
-                        </div>
-                    }
+                    </div>
                     <button type="button" id="addplayer" class="btn btn-default" data-toggle="modal" data-target="#addPlayerModal">Add Player!</button>
                 </div>
             </div>
@@ -88,4 +90,6 @@
 
         </div>
     </div>
+
+    <script src="@routes.Assets.versioned("javascripts/cyc.js")" type="text/javascript"></script>
 }

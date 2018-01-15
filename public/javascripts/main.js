@@ -1,6 +1,3 @@
-$.getScript("/assets/javascripts/cyc.js", function() {
-});
-
 $(document).ready(function() {
     $('button#roundctrl').click(function(ev) {
         console.log('clicked', $( this ).text());

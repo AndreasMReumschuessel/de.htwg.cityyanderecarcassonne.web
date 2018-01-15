@@ -6,15 +6,15 @@ $('#addplayerbtn').click(function (ev) {
     console.log("Trying to add player: " + name);
 
     var player = createPlayerObject(name);
-    $('.playerpanel').append(player);
+    $('.playerlist').append(player);
 
     $.ajax({
-        url: "@routes.CarcassonneWebController.json",
-        type: "POST",
-        dataType: "text",
-        data: "p" + name,
+        url: "/cyc/addplayer/" + name,
+        type: "GET",
+        dataType: "json",
         success: function(result){
-            console.log("AJAX succeeded! Player name: " + result);
+            player.prepend(result.meeple + " : " + result.name + " : " + result.score);
+            console.log("AJAX succeeded! Player name: " + result.meeple);
         }
     })
 });
