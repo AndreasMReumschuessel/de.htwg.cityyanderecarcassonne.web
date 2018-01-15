@@ -5,6 +5,7 @@ import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.cyc;
@@ -36,10 +37,10 @@ public class CarcassonneWebController extends Controller {
 
     public Result cycarcassonneJson(String cmd){
         execCmd(cmd);
-        return json();
+        return json(cmd);
     }
 
-    public Result json() {
-        return ok();
+    public Result json(String cmd) {
+        return ok(cmd);
     }
 }

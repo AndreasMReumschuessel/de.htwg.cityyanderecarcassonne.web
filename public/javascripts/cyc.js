@@ -7,6 +7,16 @@ $('#addplayerbtn').click(function (ev) {
 
     var player = createPlayerObject(name);
     $('.playerpanel').append(player);
+
+    $.ajax({
+        url: "@routes.CarcassonneWebController.json",
+        type: "POST",
+        dataType: "text",
+        data: "p" + name,
+        success: function(result){
+            console.log("AJAX succeeded! Player name: " + result);
+        }
+    })
 });
 
 function createPlayerObject(name) {
