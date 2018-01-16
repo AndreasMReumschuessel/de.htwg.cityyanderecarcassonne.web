@@ -12,8 +12,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.cyc;
 
-import java.sql.ResultSet;
-
 /**
  * This controller passes the commands to the CityYandereCarcassonne game and returns the TUI.
  */
@@ -46,6 +44,10 @@ public class CarcassonneWebController extends Controller {
         return ok();
     }
 
+    public Result getGameStatus() {
+        return ok(controller.getStatus().toString());
+    }
+
     public Result addPlayer(String name) {
         controller.addPlayer(name);
 
@@ -57,5 +59,15 @@ public class CarcassonneWebController extends Controller {
         jsonPlayer.score = controllerPlayer.getScore();
 
         return ok(Json.toJson(jsonPlayer));
+    }
+
+    public Result createGame() {
+        controller.create();
+        controller.startRound();
+        return ok();
+    }
+
+    public Result getCurrentPlayerName() {
+        return ok(controller.getCurrentPlayer().getName());
     }
 }

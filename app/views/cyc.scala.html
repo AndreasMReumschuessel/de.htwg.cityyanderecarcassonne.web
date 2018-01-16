@@ -28,27 +28,28 @@
                 <div class="currentcard">
                     @if(controller.cardOnHand() != null) {
                         Current card<br>
-                        <img class="img-responsive" src="@routes.Assets.versioned("cyc-data/" + {
-                            var cardClassName = controller.cardOnHand.getClass.getName
-                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
-                            cardName
-                        } + ".png")" />
+
+                            <img class="img-responsive" src="@routes.Assets.versioned("cyc-data/" + {
+                                var cardClassName = controller.cardOnHand.getClass.getName
+                                var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
+                                cardName
+                            } + ".png")" />
                     }
                 </div>
                 <div class="cardsleft">
                     Cards remaining: @(controller.getRemainingCards)
                 </div>
-                <div class="roundcontroller">
-                    <button id="roundctrl">Start Game</button>
-                </div>
                 <div class="rotator">
-                    <button id="rotleft">Rotate left</button><button id="rotright">Rotate right</button>
+                    <button type="button" id="rotleft" class="btn btn-default btn-sm">Rotate left</button><button type="button" id="rotright" class="btn btn-default btn-sm">Rotate right</button>
+                </div>
+                <div class="roundcontroller">
+                    <button type="button" id="roundctrl" class="btn btn-default">Start Game</button>
                 </div>
                 <div class="playerpanel">
                     Player:
                     <div class="playerlist">
                         @for(player <- controller.getPlayers) {
-                            <div class="player @if(player == controller.getCurrentPlayer) {active}">
+                            <div class="player @if(player == controller.getCurrentPlayer) {active}" id="@{player.getName}">
                             @if((player != null) && (player.getName != null)) {
                                 @{
                                     player.getSumMeeples + " : " + player.getName + " : " + player.getScore
