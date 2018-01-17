@@ -90,7 +90,7 @@ function roundStarted() {
     showActivePlayer()
     showCurrentCard()
     showRemainingCards()
-    //showCardPossibilities()
+    showCardPossibilities()
 }
 
 function showActivePlayer() {
@@ -149,7 +149,28 @@ function showRemainingCards() {
 }
 
 function showCardPossibilities() {
-    console.debug("Showing possibilities for cards...")
+    $.ajax({
+        url: "/cyc/cardposslist/",
+        type: "GET",
+        dataType: "json",
+        success: function (possList) {
+            possList.forEach(function (item) {
+                $('#' + item.position)
+                    .addClass("active")
+                    .prop("title", item.selector)
+            })
+            registerPossibleCardPlacementListener()
+        },
+        error: function (jqxhr, errstatus, errmsg) {
+            console.error("showCardPossibilities function: " + errstatus + " -> " + errmsg)
+        }
+    })
+}
+
+function registerPossibleCardPlacementListener() {
+    $('.tsColumn.active').click(function (ev) {
+        console.log("I want to place the card at position " + $(ev.target).attr("title"))
+    })
 }
 
 // Helper functions

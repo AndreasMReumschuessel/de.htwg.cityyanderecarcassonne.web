@@ -4,15 +4,22 @@ import de.htwg.cityyanderecarcassonne.Carcassonne;
 import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
 import de.htwg.cityyanderecarcassonne.model.ICard;
 import de.htwg.cityyanderecarcassonne.model.IPlayer;
+import de.htwg.cityyanderecarcassonne.model.IPosition;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
+import javafx.geometry.Pos;
 import models.CurrentCard;
 import models.Player;
+import models.PossCardPos;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.cyc;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This controller passes the commands to the CityYandereCarcassonne game and returns the TUI.
@@ -85,5 +92,18 @@ public class CarcassonneWebController extends Controller {
 
     public Result getRemainingCards() {
         return ok(String.valueOf(controller.getRemainingCards()));
+    }
+
+    public Result getCardPossibilities() {
+        Map<IPosition, String> possMap = controller.getCardPossibilitiesMap(controller.cardOnHand());
+        List<PossCardPos> possList = new ArrayList<>();
+        for (Map.Entry<IPosition, String> entry : possMap.entrySet()){
+            PossCardPos cardPos = new PossCardPos();
+            cardPos.selector = entry.getValue();
+            cardPos.position = entry.getKey().getY() + "_" + entry.getKey().getX();
+            possList.add(cardPos);
+        }
+
+        return ok(Json.toJson(possList));
     }
 }
