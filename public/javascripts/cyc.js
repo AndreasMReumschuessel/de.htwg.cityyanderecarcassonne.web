@@ -11,12 +11,17 @@ if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
     disable($('#roundctrl'))
 
     checkGameStartable()
+} else {
+    $('#addplayer').hide()
 }
 
 if (gamestatus === "ROUND_START") {
     roundStarted()
-} else if (gamestatus === "CARD_ROTATED") {
+} else if (gamestatus === "CARD_ROTATED" ||gamestatus === "CARD_SET_FAIL") {
+    disable($('#roundctrl').html("Finish Round"))
+
     showCurrentCard()
+    showCardPossibilities()
 }
 
 // Add a new player
@@ -84,8 +89,7 @@ function roundStarted() {
     enable($('#rotleft'))
     enable($('#rotright'))
 
-    $('#roundctrl').html("Finish Round")
-    disable($('#roundctrl'))
+    disable($('#roundctrl').html("Finish Round"))
 
     showActivePlayer()
     showCurrentCard()
