@@ -4,6 +4,7 @@
 gamestatus = getGameStatus()
 
 if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
+    $('.currentcard').hide()
     $('.cardsleft').hide()
     disable($('#rotleft'))
     disable($('#rotright'))
@@ -14,6 +15,8 @@ if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
 
 if (gamestatus === "ROUND_START") {
     roundStarted()
+} else if (gamestatus === "CARD_ROTATED") {
+    showCurrentCard()
 }
 
 // Add a new player
@@ -76,7 +79,8 @@ function checkGameStartable() {
 function roundStarted() {
     console.info("A new round has started!")
     $('#addplayer').hide()
-    $('.cardsleft').show
+    $('.currentcard').show()
+    $('.cardsleft').show()
     enable($('#rotleft'))
     enable($('#rotright'))
 
@@ -84,9 +88,9 @@ function roundStarted() {
     disable($('#roundctrl'))
 
     showActivePlayer()
-    //showCurrentCard()
+    showCurrentCard()
     //showRemainingCards()
-    showCardPossibilities()
+    //showCardPossibilities()
 }
 
 function showActivePlayer() {
@@ -102,6 +106,33 @@ function showActivePlayer() {
             console.error("showActivePlayer function: " + errstatus + " -> " + errmsg)
         }
     })
+}
+
+function showCurrentCard() {
+    $.ajax({
+        url: "/cyc/currentcard/",
+        type: "GET",
+        dataType: "json",
+        success: function (currCard) {
+            console.log(currCard.cardname + " | " + currCard.orientation)
+            console.debug("Current card: " + currCard.cardname)
+
+            if ($('.currentcard').length === 0) {
+                cardimage = $(document.createElement('img'))
+                    .addClass('img-responsive')
+                    .attr("src", "/assets/cyc-data/" + currCard.cardname + ".png")
+                $('.currentcard').append(cardimage)
+            }
+            rotateCard(".currentcard", currCard.orientation)
+        },
+        error: function (jqxhr, errstatus, errmsg) {
+            console.error("showCurrentCard function: " + errstatus + " -> " + errmsg)
+        }
+    })
+}
+
+function rotateCard(divid, orientation) {
+    $(divid + ' > img').rotate(orientation)
 }
 
 function showCardPossibilities() {

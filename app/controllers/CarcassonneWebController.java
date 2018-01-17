@@ -2,8 +2,10 @@ package controllers;
 
 import de.htwg.cityyanderecarcassonne.Carcassonne;
 import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
+import de.htwg.cityyanderecarcassonne.model.ICard;
 import de.htwg.cityyanderecarcassonne.model.IPlayer;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
+import models.CurrentCard;
 import models.Player;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -69,5 +71,15 @@ public class CarcassonneWebController extends Controller {
 
     public Result getCurrentPlayerName() {
         return ok(controller.getCurrentPlayer().getName());
+    }
+
+    public Result getCurrentCard() {
+        ICard currCard = controller.cardOnHand();
+
+        CurrentCard jsonCurrCard = new CurrentCard();
+        jsonCurrCard.cardname = currCard.toString().substring(currCard.toString().lastIndexOf(" ") + 1);
+        jsonCurrCard.orientation = currCard.getOrientation();
+
+        return ok(Json.toJson(jsonCurrCard));
     }
 }
