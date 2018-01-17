@@ -38,12 +38,6 @@ public class CarcassonneWebController extends Controller {
         return ok(cyc.render(controller));
     }
 
-    public Result cycarcassonnePost() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        String cmd = dynamicForm.get("command");
-        return cycarcassonne(cmd);
-    }
-
     public Result cycarcassonneJson(String cmd){
         execCmd(cmd);
         return json();
