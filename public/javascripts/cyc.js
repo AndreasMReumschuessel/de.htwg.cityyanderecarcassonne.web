@@ -89,7 +89,7 @@ function roundStarted() {
 
     showActivePlayer()
     showCurrentCard()
-    //showRemainingCards()
+    showRemainingCards()
     //showCardPossibilities()
 }
 
@@ -114,10 +114,9 @@ function showCurrentCard() {
         type: "GET",
         dataType: "json",
         success: function (currCard) {
-            console.log(currCard.cardname + " | " + currCard.orientation)
             console.debug("Current card: " + currCard.cardname)
 
-            if ($('.currentcard').length === 0) {
+            if ($('.currentcard > img').length === 0) {
                 cardimage = $(document.createElement('img'))
                     .addClass('img-responsive')
                     .attr("src", "/assets/cyc-data/" + currCard.cardname + ".png")
@@ -133,6 +132,20 @@ function showCurrentCard() {
 
 function rotateCard(divid, orientation) {
     $(divid + ' > img').rotate(orientation)
+}
+
+function showRemainingCards() {
+    $.ajax({
+        url: "/cyc/cardcount/",
+        type: "GET",
+        dataType: "text",
+        success: function (cardcount) {
+            $('.cardsleft').html("Cards remaining: " + cardcount)
+        },
+        error: function (jqxhr, errstatus, errmsg) {
+            console.error("showRemainingCards function: " + errstatus + " -> " + errmsg)
+        }
+    })
 }
 
 function showCardPossibilities() {

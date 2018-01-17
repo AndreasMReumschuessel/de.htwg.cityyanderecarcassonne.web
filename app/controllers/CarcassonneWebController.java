@@ -82,4 +82,8 @@ public class CarcassonneWebController extends Controller {
 
         return ok(Json.toJson(jsonCurrCard));
     }
+
+    public Result getRemainingCards() {
+        return ok(String.valueOf(controller.getRemainingCards()));
+    }
 }
