@@ -58,6 +58,14 @@ a {
 .tsColumn {
   display: inline-block;
   background-color: lightgray;
+
+  &.active {
+    transition: background-color 300ms;
+    background-color: yellow;
+    &:hover {
+      background-color: orange;
+    }
+  }
 }
 
 @media all {

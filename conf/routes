@@ -9,7 +9,16 @@ GET     /rules                      controllers.PagesController.rules
 # Game pages
 GET     /cycarcassonne              controllers.CarcassonneWebController.cycarcassonne(cmd: String = "h")
 GET     /cycarcassonne/:cmd         controllers.CarcassonneWebController.cycarcassonne(cmd: String)
-POST    /cycarcassonne              controllers.CarcassonneWebController.cycarcassonnePost
+POST    /cyc/json/:cmd              controllers.CarcassonneWebController.cycarcassonneJson(cmd: String)
+GET     /cyc/json                   controllers.CarcassonneWebController.json()
+
+GET     /cyc/gamestatus/            controllers.CarcassonneWebController.getGameStatus()
+GET     /cyc/addplayer/:name        controllers.CarcassonneWebController.addPlayer(name: String)
+GET     /cyc/creategame/            controllers.CarcassonneWebController.createGame()
+GET     /cyc/currentplayer/         controllers.CarcassonneWebController.getCurrentPlayerName()
+GET     /cyc/currentcard/           controllers.CarcassonneWebController.getCurrentCard()
+GET     /cyc/cardcount/             controllers.CarcassonneWebController.getRemainingCards()
+GET     /cyc/cardposslist/          controllers.CarcassonneWebController.getCardPossibilities()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
