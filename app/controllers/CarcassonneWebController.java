@@ -6,9 +6,7 @@ import de.htwg.cityyanderecarcassonne.model.ICard;
 import de.htwg.cityyanderecarcassonne.model.IPlayer;
 import de.htwg.cityyanderecarcassonne.model.IPosition;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
-import models.CurrentCard;
-import models.Player;
-import models.PossCardPos;
+import models.*;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -81,15 +79,19 @@ public class CarcassonneWebController extends Controller {
         } else {
             return badRequest("Unknown direction. Only \"left\" and \"right\" possible.");
         }
-        return ok(Json.toJson(cardConvert(controller.cardOnHand())));
+        return getCurrentCard();
     }
 
     private CurrentCard cardConvert(ICard icard) {
         CurrentCard currCard = new CurrentCard();
-        currCard.cardname = icard.toString().substring(icard.toString().lastIndexOf(" ") + 1);
+        currCard.cardname = cardConvertName(icard);
         currCard.orientation = icard.getOrientation();
 
         return currCard;
+    }
+
+    private String cardConvertName(ICard icard) {
+        return icard.toString().substring(icard.toString().lastIndexOf(" ") + 1);
     }
 
     public Result getRemainingCards() {
@@ -107,5 +109,36 @@ public class CarcassonneWebController extends Controller {
         }
 
         return ok(Json.toJson(possList));
+    }
+
+    public Result placeCard(String selection) {
+        controller.placeCard(controller.cardOnHand(), selection);
+        return getGameStatus();
+    }
+
+    public Result getTownsquare() {
+        de.htwg.cityyanderecarcassonne.model.townsquare.Townsquare cts = controller.getTownsquare();
+
+        Townsquare ts = new Townsquare();
+        ts.cards = new ArrayList<>();
+        for (int x = 0; x < cts.getDimX(); x++) {
+            for (int y = 0; y < cts.getDimY(); y++) {
+                ICard ctsCard = cts.getCard(x, y);
+                if (ctsCard != null) {
+                    TSCard card = new TSCard();
+                    card.position = y + "_" + x;
+                    card.name = cardConvertName(ctsCard);
+                    card.orientation = ctsCard.getOrientation();
+                    ts.cards.add(card);
+                }
+            }
+        }
+
+        return ok(Json.toJson(ts));
+    }
+
+    public Result finishRound() {
+        controller.finishRound();
+        return ok();
     }
 }

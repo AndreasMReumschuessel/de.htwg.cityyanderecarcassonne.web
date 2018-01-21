@@ -20,6 +20,9 @@ GET     /cyc/currentcard/           controllers.CarcassonneWebController.getCurr
 GET     /cyc/rotatecard/:direction  controllers.CarcassonneWebController.rotateCard(direction: String)
 GET     /cyc/cardcount/             controllers.CarcassonneWebController.getRemainingCards()
 GET     /cyc/cardposslist/          controllers.CarcassonneWebController.getCardPossibilities()
+GET     /cyc/placecard/:selector    controllers.CarcassonneWebController.placeCard(selector: String)
+GET     /cyc/gettownsquare/         controllers.CarcassonneWebController.getTownsquare()
+GET     /cyc/finishround/           controllers.CarcassonneWebController.finishRound()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

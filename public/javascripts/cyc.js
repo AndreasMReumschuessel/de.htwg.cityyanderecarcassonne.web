@@ -17,12 +17,15 @@ if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
 
 if (gamestatus === "ROUND_START") {
     roundStarted()
-} else if (gamestatus === "CARD_ROTATED" ||gamestatus === "CARD_SET_FAIL") {
+} else if (gamestatus === "CARD_ROTATED" || gamestatus === "CARD_SET_FAIL") {
     disable($('#roundctrl').html("Finish Round"))
 
+    updateTownsquare()
     showCurrentCard()
     registerRotateCurrentCardListener()
     showCardPossibilities()
+} else if (gamestatus === "CARD_SET_SUCCESS") {
+    cardSuccessfullySet()
 }
 
 // Add a new player
@@ -72,6 +75,17 @@ $('#roundctrl').click(function(ev) {
                 console.error("Creategame function: " + errstatus + " -> " + errmsg)
             }
         })
+    } else if (gamestatus === "CARD_SET_SUCCESS") {
+        $.ajax({
+            url: "/cyc/finishround/",
+            type: "GET",
+            success: function (result) {
+                roundStarted()
+            },
+            error: function (jqxhr, errstatus, errmsg) {
+                console.error("Creategame function: " + errstatus + " -> " + errmsg)
+            }
+        })
     }
 });
 
@@ -92,11 +106,24 @@ function roundStarted() {
 
     disable($('#roundctrl').html("Finish Round"))
 
+    updateTownsquare()
     showActivePlayer()
     showCurrentCard()
     registerRotateCurrentCardListener()
     showRemainingCards()
     showCardPossibilities()
+}
+
+function cardSuccessfullySet() {
+    enable($('#roundctrl').html("Finish Round"))
+    disable($('#rotleft'))
+    disable($('#rotright'))
+
+    // Clear all old possibilities
+    $('.tsColumn').removeClass("active")
+
+    updateTownsquare()
+    //showMeeplePossibilities()
 }
 
 function showActivePlayer() {
@@ -106,6 +133,7 @@ function showActivePlayer() {
         dataType: "text",
         success: function(result) {
             console.debug("Currentplayer: " + result)
+            $('.player').removeClass("active")
             $('#' + result).addClass("active")
         },
         error: function(jqxhr, errstatus, errmsg) {
@@ -122,18 +150,25 @@ function showCurrentCard() {
         success: function (currCard) {
             console.debug("Current card: " + currCard.cardname)
 
-            if ($('.currentcard > img').length === 0) {
-                cardimage = $(document.createElement('img'))
-                    .addClass('img-responsive')
-                    .attr("src", "/assets/cyc-data/" + currCard.cardname + ".png")
-                $('.currentcard').append(cardimage)
-            }
+            createOrUpdateCardImageObject(".currentcard", currCard.cardname)
             rotateCard(".currentcard", currCard.orientation)
         },
         error: function (jqxhr, errstatus, errmsg) {
             console.error("showCurrentCard function: " + errstatus + " -> " + errmsg)
         }
     })
+}
+
+function createOrUpdateCardImageObject(div, cardName) {
+    var image = $(div + ' > img')
+    if (image.length === 0) {
+        cardimage = $(document.createElement('img'))
+            .addClass('img-responsive')
+            .attr("src", "/assets/cyc-data/" + cardName + ".png")
+        $(div).append(cardimage)
+    } else {
+        image.attr("src", "/assets/cyc-data/" + cardName + ".png")
+    }
 }
 
 function showRemainingCards() {
@@ -151,6 +186,9 @@ function showRemainingCards() {
 }
 
 function registerRotateCurrentCardListener() {
+    $('#rotleft').off()
+    $('#rotright').off()
+
     $('#rotleft').click(function (ev) {
         ajaxRotateCard("left")
     })
@@ -194,8 +232,41 @@ function showCardPossibilities() {
 }
 
 function registerPossibleCardPlacementListener() {
+    $('.tsColumn.active').off()
     $('.tsColumn.active').click(function (ev) {
-        console.log("I want to place the card at position " + $(ev.target).attr("title"))
+        var selection = $(ev.target).attr("title")
+        $.ajax({
+            url: "/cyc/placecard/" + selection,
+            type: "GET",
+            success: function (result) {
+                if (result === "CARD_SET_SUCCESS") {
+                    cardSuccessfullySet()
+                } else {
+                    alert("Card cannot be placed here, please rotate the card until it fits ^-^")
+                }
+            },
+            error: function (jqxhr, errstatus, errmsg) {
+                console.error("showRemainingCards function: " + errstatus + " -> " + errmsg)
+            }
+        })
+    })
+}
+
+function updateTownsquare() {
+    $.ajax({
+        url: "/cyc/gettownsquare/",
+        type: "GET",
+        dataType: "json",
+        success: function(ts) {
+            ts.cards.forEach(function (card) {
+                var div = "#" + card.position
+                createOrUpdateCardImageObject(div, card.name)
+                rotateCard(div, card.orientation)
+            })
+        },
+        error: function(jqxhr, errstatus, errmsg) {
+            console.error("getGameStatus function: " + errstatus + " -> " + errmsg)
+        },
     })
 }
 
