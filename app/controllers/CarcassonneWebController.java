@@ -6,20 +6,15 @@ import de.htwg.cityyanderecarcassonne.model.ICard;
 import de.htwg.cityyanderecarcassonne.model.IPlayer;
 import de.htwg.cityyanderecarcassonne.model.IPosition;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
-import javafx.geometry.Pos;
 import models.CurrentCard;
 import models.Player;
 import models.PossCardPos;
-import play.data.DynamicForm;
-import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.cyc;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This controller passes the commands to the CityYandereCarcassonne game and returns the TUI.
@@ -75,13 +70,26 @@ public class CarcassonneWebController extends Controller {
     }
 
     public Result getCurrentCard() {
-        ICard currCard = controller.cardOnHand();
+        return ok(Json.toJson(cardConvert(controller.cardOnHand())));
+    }
 
-        CurrentCard jsonCurrCard = new CurrentCard();
-        jsonCurrCard.cardname = currCard.toString().substring(currCard.toString().lastIndexOf(" ") + 1);
-        jsonCurrCard.orientation = currCard.getOrientation();
+    public Result rotateCard(String direction) {
+        if ("left".equals(direction)) {
+            controller.rotateCardLeft();
+        } else if ("right".equals(direction)) {
+            controller.rotateCardRight();
+        } else {
+            return badRequest("Unknown direction. Only \"left\" and \"right\" possible.");
+        }
+        return ok(Json.toJson(cardConvert(controller.cardOnHand())));
+    }
 
-        return ok(Json.toJson(jsonCurrCard));
+    private CurrentCard cardConvert(ICard icard) {
+        CurrentCard currCard = new CurrentCard();
+        currCard.cardname = icard.toString().substring(icard.toString().lastIndexOf(" ") + 1);
+        currCard.orientation = icard.getOrientation();
+
+        return currCard;
     }
 
     public Result getRemainingCards() {

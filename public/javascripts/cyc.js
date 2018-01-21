@@ -21,6 +21,7 @@ if (gamestatus === "ROUND_START") {
     disable($('#roundctrl').html("Finish Round"))
 
     showCurrentCard()
+    registerRotateCurrentCardListener()
     showCardPossibilities()
 }
 
@@ -93,6 +94,7 @@ function roundStarted() {
 
     showActivePlayer()
     showCurrentCard()
+    registerRotateCurrentCardListener()
     showRemainingCards()
     showCardPossibilities()
 }
@@ -134,10 +136,6 @@ function showCurrentCard() {
     })
 }
 
-function rotateCard(divid, orientation) {
-    $(divid + ' > img').rotate(orientation)
-}
-
 function showRemainingCards() {
     $.ajax({
         url: "/cyc/cardcount/",
@@ -148,6 +146,30 @@ function showRemainingCards() {
         },
         error: function (jqxhr, errstatus, errmsg) {
             console.error("showRemainingCards function: " + errstatus + " -> " + errmsg)
+        }
+    })
+}
+
+function registerRotateCurrentCardListener() {
+    $('#rotleft').click(function (ev) {
+        ajaxRotateCard("left")
+    })
+
+    $('#rotright').click(function (ev) {
+        ajaxRotateCard("right")
+    })
+}
+
+function ajaxRotateCard(direction) {
+    $.ajax({
+        url: "/cyc/rotatecard/" + direction,
+        type: "GET",
+        dataType: "json",
+        success: function (card) {
+            rotateCard(".currentcard", card.orientation)
+        },
+        error: function (jqxhr, errstatus, errmsg) {
+            console.error("ajaxRotateCard function " + direction +": " + errstatus + " -> " + errmsg)
         }
     })
 }
@@ -203,4 +225,8 @@ function disable(i) {
 
 function enable(i) {
     i.prop("disabled", false)
+}
+
+function rotateCard(divid, orientation) {
+    $(divid + ' > img').rotate(orientation)
 }

@@ -17,6 +17,7 @@ GET     /cyc/addplayer/:name        controllers.CarcassonneWebController.addPlay
 GET     /cyc/creategame/            controllers.CarcassonneWebController.createGame()
 GET     /cyc/currentplayer/         controllers.CarcassonneWebController.getCurrentPlayerName()
 GET     /cyc/currentcard/           controllers.CarcassonneWebController.getCurrentCard()
+GET     /cyc/rotatecard/:direction  controllers.CarcassonneWebController.rotateCard(direction: String)
 GET     /cyc/cardcount/             controllers.CarcassonneWebController.getRemainingCards()
 GET     /cyc/cardposslist/          controllers.CarcassonneWebController.getCardPossibilities()
 
