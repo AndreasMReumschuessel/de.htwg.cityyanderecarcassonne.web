@@ -21,6 +21,8 @@ public class CarcassonneWebController extends Controller {
     private final static Carcassonne carcassonne = Carcassonne.getInstance(15, 15, false, true);
     private final static ICarcassonneController controller = carcassonne.getController();
 
+    private Map<String, String> playerIdMap = new HashMap<>();
+
     private void execCmd(String cmd) {
         TextUI tui = carcassonne.getTui();
         tui.processInput(cmd);
@@ -47,9 +49,13 @@ public class CarcassonneWebController extends Controller {
     public Result addPlayer(String name) {
         controller.addPlayer(name);
 
+        String pid = "pid_" + playerIdMap.size();
+        playerIdMap.put(name, pid);
+
         IPlayer controllerPlayer = controller.getPlayers().get(controller.getPlayers().size() - 1);
 
         Player jsonPlayer = new Player();
+        jsonPlayer.pid = pid;
         jsonPlayer.name = name;
         jsonPlayer.meeple = controllerPlayer.getSumMeeples();
         jsonPlayer.score = controllerPlayer.getScore();
@@ -63,8 +69,8 @@ public class CarcassonneWebController extends Controller {
         return ok();
     }
 
-    public Result getCurrentPlayerName() {
-        return ok(controller.getCurrentPlayer().getName());
+    public Result getCurrentPlayerId() {
+        return ok(playerIdMap.get(controller.getCurrentPlayer().getName()));
     }
 
     public Result getCurrentCard() {
