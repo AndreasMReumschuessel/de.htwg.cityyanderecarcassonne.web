@@ -22,7 +22,7 @@ public class CarcassonneWebController extends Controller {
     private final static Carcassonne carcassonne = Carcassonne.getInstance(15, 15, false, true);
     private final static ICarcassonneController controller = carcassonne.getController();
 
-    private Map<String, String> playerIdMap = new HashMap<>();
+    private Map<IPlayer, String> playerIdMap = new HashMap<>();
     private String lastCardPosition;
 
     private void execCmd(String cmd) {
@@ -51,10 +51,10 @@ public class CarcassonneWebController extends Controller {
     public Result addPlayer(String name) {
         controller.addPlayer(name);
 
-        String pid = "pid_" + playerIdMap.size();
-        playerIdMap.put(name, pid);
-
         IPlayer controllerPlayer = controller.getPlayers().get(controller.getPlayers().size() - 1);
+
+        String pid = "pid_" + playerIdMap.size();
+        playerIdMap.put(controllerPlayer, pid);
 
         Player jsonPlayer = new Player();
         jsonPlayer.pid = pid;
@@ -72,7 +72,7 @@ public class CarcassonneWebController extends Controller {
     }
 
     public Result getCurrentPlayerId() {
-        return ok(playerIdMap.get(controller.getCurrentPlayer().getName()));
+        return ok(playerIdMap.get(controller.getCurrentPlayer()));
     }
 
     public Result getCurrentCard() {
@@ -190,6 +190,39 @@ public class CarcassonneWebController extends Controller {
                     card.position = y + "_" + x;
                     card.name = cardConvertName(ctsCard);
                     card.orientation = ctsCard.getOrientation();
+                    card.regions = new HashMap<>();
+
+                    if (ctsCard.getLeftTop().getPlayer() != null)
+                        card.regions.put("LT", playerIdMap.get(ctsCard.getLeftTop().getPlayer()));
+                    if (ctsCard.getLeftMiddle().getPlayer() != null)
+                        card.regions.put("LM", playerIdMap.get(ctsCard.getLeftMiddle().getPlayer()));
+                    if (ctsCard.getLeftBelow().getPlayer() != null)
+                        card.regions.put("LB", playerIdMap.get(ctsCard.getLeftBelow().getPlayer()));
+
+                    if (ctsCard.getTopLeft().getPlayer() != null)
+                        card.regions.put("TL", playerIdMap.get(ctsCard.getTopLeft().getPlayer()));
+                    if (ctsCard.getTopMiddle().getPlayer() != null)
+                        card.regions.put("TM", playerIdMap.get(ctsCard.getTopMiddle().getPlayer()));
+                    if (ctsCard.getTopRight().getPlayer() != null)
+                        card.regions.put("TR", playerIdMap.get(ctsCard.getTopRight().getPlayer()));
+
+                    if (ctsCard.getCenterMiddle().getPlayer() != null)
+                        card.regions.put("C", playerIdMap.get(ctsCard.getCenterMiddle().getPlayer()));
+
+                    if (ctsCard.getBelowLeft().getPlayer() != null)
+                        card.regions.put("BL", playerIdMap.get(ctsCard.getBelowLeft().getPlayer()));
+                    if (ctsCard.getBelowMiddle().getPlayer() != null)
+                        card.regions.put("BM", playerIdMap.get(ctsCard.getBelowMiddle().getPlayer()));
+                    if (ctsCard.getBelowRight().getPlayer() != null)
+                        card.regions.put("BR", playerIdMap.get(ctsCard.getBelowRight().getPlayer()));
+
+                    if (ctsCard.getRightTop().getPlayer() != null)
+                        card.regions.put("RT", playerIdMap.get(ctsCard.getRightTop().getPlayer()));
+                    if (ctsCard.getRightMiddle().getPlayer() != null)
+                        card.regions.put("RM", playerIdMap.get(ctsCard.getRightMiddle().getPlayer()));
+                    if (ctsCard.getRightBelow().getPlayer() != null)
+                        card.regions.put("RB", playerIdMap.get(ctsCard.getRightBelow().getPlayer()));
+
                     ts.cards.add(card);
                 }
             }

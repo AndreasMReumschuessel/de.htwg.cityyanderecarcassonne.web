@@ -94,6 +94,9 @@ function checkGameStartable() {
     if ($('.player').length > 0) {
         enable($('#roundctrl'))
     }
+    if ($('.player').length === 4) {
+        $('#addplayer').hide()
+    }
 }
 
 function roundStarted() {
@@ -271,7 +274,7 @@ function showMeeplePossibilities() {
         dataType: "json",
         success: function (possList) {
             var cardId = '#' + possList.position
-            $(cardId).append($(document.createElement('div')).addClass('meeplecontainer'))
+            createMeepleContainer(cardId)
             Object.keys(possList.regions).forEach(function (key, item) {
                 showMeepleOnPosition(cardId + ' > .meeplecontainer', key, 'poss', possList.regions[key])
             })
@@ -282,6 +285,12 @@ function showMeeplePossibilities() {
             console.error("showMeeplePossibilities function: " + errstatus + " -> " + errmsg)
         }
     })
+}
+
+function createMeepleContainer(div) {
+    if ($(div + ' > .meeplecontainer').length === 0) {
+        $(div).append($(document.createElement('div')).addClass('meeplecontainer'))
+    }
 }
 
 function showMeepleOnPosition(divid, location, type, id) {
@@ -317,6 +326,7 @@ function registerPossibleMeeplePlacementListener() {
 }
 
 function updateTownsquare() {
+    $('.meeplecontainer').remove()
     $.ajax({
         url: "/cyc/gettownsquare/",
         type: "GET",
@@ -326,6 +336,11 @@ function updateTownsquare() {
                 var div = "#" + card.position
                 createOrUpdateCardImageObject(div, card.name)
                 rotateCard(div, card.orientation)
+
+                createMeepleContainer(div)
+                Object.keys(card.regions).forEach(function (key, item) {
+                    showMeepleOnPosition(div + ' > .meeplecontainer', key, card.regions[key])
+                })
             })
         },
         error: function(jqxhr, errstatus, errmsg) {
