@@ -20,7 +20,9 @@ GET     /cyc/currentcard/           controllers.CarcassonneWebController.getCurr
 GET     /cyc/rotatecard/:direction  controllers.CarcassonneWebController.rotateCard(direction: String)
 GET     /cyc/cardcount/             controllers.CarcassonneWebController.getRemainingCards()
 GET     /cyc/cardposslist/          controllers.CarcassonneWebController.getCardPossibilities()
-GET     /cyc/placecard/:selector    controllers.CarcassonneWebController.placeCard(selector: String)
+GET     /cyc/placecard/:selector/:position    controllers.CarcassonneWebController.placeCard(selector: String, position: String)
+GET     /cyc/meepleposslist/        controllers.CarcassonneWebController.getMeeplePossibilities()
+GET     /cyc/placemeeple/:selector  controllers.CarcassonneWebController.placeMeeple(selector: String)
 GET     /cyc/gettownsquare/         controllers.CarcassonneWebController.getTownsquare()
 GET     /cyc/finishround/           controllers.CarcassonneWebController.finishRound()
 

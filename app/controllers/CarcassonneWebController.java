@@ -5,6 +5,7 @@ import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController;
 import de.htwg.cityyanderecarcassonne.model.ICard;
 import de.htwg.cityyanderecarcassonne.model.IPlayer;
 import de.htwg.cityyanderecarcassonne.model.IPosition;
+import de.htwg.cityyanderecarcassonne.model.IRegion;
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI;
 import models.*;
 import play.libs.Json;
@@ -22,6 +23,7 @@ public class CarcassonneWebController extends Controller {
     private final static ICarcassonneController controller = carcassonne.getController();
 
     private Map<String, String> playerIdMap = new HashMap<>();
+    private String lastCardPosition;
 
     private void execCmd(String cmd) {
         TextUI tui = carcassonne.getTui();
@@ -85,6 +87,7 @@ public class CarcassonneWebController extends Controller {
         } else {
             return badRequest("Unknown direction. Only \"left\" and \"right\" possible.");
         }
+        System.out.println(controller.cardOnHand().getLeftMiddle().getID());
         return getCurrentCard();
     }
 
@@ -117,8 +120,60 @@ public class CarcassonneWebController extends Controller {
         return ok(Json.toJson(possList));
     }
 
-    public Result placeCard(String selection) {
+    public Result placeCard(String selection, String position) {
+        lastCardPosition = position;
         controller.placeCard(controller.cardOnHand(), selection);
+        return getGameStatus();
+    }
+
+    public Result getMeeplePossibilities() {
+        ICard card = controller.cardOnHand();
+
+        Map<IRegion, String> possMap = controller.getRegionPossibilitiesMap(card);
+
+        TSCard tscard = new TSCard();
+        tscard.position = lastCardPosition;
+        tscard.name = cardConvertName(card);
+        tscard.orientation = card.getOrientation();
+        tscard.regions = new HashMap<>();
+        for (Map.Entry<IRegion, String> entry : possMap.entrySet()) {
+            if (entry.getKey().equals(card.getLeftTop()))
+                tscard.regions.put("LT", entry.getValue());
+            if (entry.getKey().equals(card.getLeftMiddle()))
+                tscard.regions.put("LM", entry.getValue());
+            if (entry.getKey().equals(card.getLeftBelow()))
+                tscard.regions.put("LB", entry.getValue());
+
+            if (entry.getKey().equals(card.getBelowLeft()))
+                tscard.regions.put("BL", entry.getValue());
+            if (entry.getKey().equals(card.getBelowMiddle()))
+                tscard.regions.put("BM", entry.getValue());
+            if (entry.getKey().equals(card.getBelowRight()))
+                tscard.regions.put("BR", entry.getValue());
+
+            if (entry.getKey().equals(card.getCenterMiddle()))
+                tscard.regions.put("C", entry.getValue());
+
+            if (entry.getKey().equals(card.getTopLeft()))
+                tscard.regions.put("TL", entry.getValue());
+            if (entry.getKey().equals(card.getTopMiddle()))
+                tscard.regions.put("TM", entry.getValue());
+            if (entry.getKey().equals(card.getTopRight()))
+                tscard.regions.put("TR", entry.getValue());;
+
+            if (entry.getKey().equals(card.getRightTop()))
+                tscard.regions.put("RT", entry.getValue());
+            if (entry.getKey().equals(card.getRightMiddle()))
+                tscard.regions.put("RM", entry.getValue());
+            if (entry.getKey().equals(card.getRightBelow()))
+                tscard.regions.put("RB", entry.getValue());
+        }
+
+        return ok(Json.toJson(tscard));
+    }
+
+    public Result placeMeeple(String selection) {
+        controller.placeMeeple(controller.getCurrentPlayer(), controller.cardOnHand(), selection);
         return getGameStatus();
     }
 

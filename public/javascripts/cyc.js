@@ -104,6 +104,9 @@ function roundStarted() {
     enable($('#rotleft'))
     enable($('#rotright'))
 
+    $('.meeple.poss').off()
+    $('.meeple.poss').remove()
+
     disable($('#roundctrl').html("Finish Round"))
 
     updateTownsquare()
@@ -120,10 +123,18 @@ function cardSuccessfullySet() {
     disable($('#rotright'))
 
     // Clear all old possibilities
+    $('.tsColumn.active').off()
     $('.tsColumn').removeClass("active")
 
+    showMeeplePossibilities()
     updateTownsquare()
-    //showMeeplePossibilities()
+}
+
+function meepleSuccessfullySet() {
+    $('.meeple.poss').off()
+    $('.meeple.poss').remove()
+
+    roundStarted()
 }
 
 function showActivePlayer() {
@@ -236,8 +247,9 @@ function registerPossibleCardPlacementListener() {
     $('.tsColumn.active').click(function (ev) {
         var selection = $(ev.target).attr("title")
         $.ajax({
-            url: "/cyc/placecard/" + selection,
+            url: "/cyc/placecard/" + selection + "/" + $(ev.target).attr("id"),
             type: "GET",
+            dataType: "text",
             success: function (result) {
                 if (result === "CARD_SET_SUCCESS") {
                     cardSuccessfullySet()
@@ -246,7 +258,59 @@ function registerPossibleCardPlacementListener() {
                 }
             },
             error: function (jqxhr, errstatus, errmsg) {
-                console.error("showRemainingCards function: " + errstatus + " -> " + errmsg)
+                console.error("placeCard function: " + errstatus + " -> " + errmsg)
+            }
+        })
+    })
+}
+
+function showMeeplePossibilities() {
+    $.ajax({
+        url: "/cyc/meepleposslist/",
+        type: "GET",
+        dataType: "json",
+        success: function (possList) {
+            var cardId = '#' + possList.position
+            $(cardId).append($(document.createElement('div')).addClass('meeplecontainer'))
+            Object.keys(possList.regions).forEach(function (key, item) {
+                showMeepleOnPosition(cardId + ' > .meeplecontainer', key, 'poss', possList.regions[key])
+            })
+            //$(cardId + ' > .meeplecontainer').rotate(possList.orientation)
+            registerPossibleMeeplePlacementListener()
+        },
+        error: function (jqxhr, errstatus, errmsg) {
+            console.error("showMeeplePossibilities function: " + errstatus + " -> " + errmsg)
+        }
+    })
+}
+
+function showMeepleOnPosition(divid, location, type, id) {
+    meeple = $(document.createElement('div'))
+                .addClass('meeple')
+                .addClass(location)
+                .addClass(type)
+                .attr("id", id)
+    $(divid).append(meeple)
+}
+
+function registerPossibleMeeplePlacementListener() {
+    $('.meeple.poss').off()
+    $('.meeple.poss').click(function (ev) {
+        var selection = $(ev.target).attr("id")
+        $.ajax({
+            url: "/cyc/placemeeple/" + selection,
+            type: "GET",
+            dataType: "text",
+            success: function (result) {
+                if (result === "ROUND_START") {
+                    meepleSuccessfullySet()
+                    console.debug("meeple set succ")
+                } else {
+                    alert("Meeple cannot be placed here, well, ba-baka this shouldn't happen >///<" + result)
+                }
+            },
+            error: function (jqxhr, errstatus, errmsg) {
+                console.error("placeMeeple function: " + errstatus + " -> " + errmsg)
             }
         })
     })
