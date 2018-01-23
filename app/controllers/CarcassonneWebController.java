@@ -56,13 +56,27 @@ public class CarcassonneWebController extends Controller {
         String pid = "pid_" + playerIdMap.size();
         playerIdMap.put(controllerPlayer, pid);
 
-        Player jsonPlayer = new Player();
-        jsonPlayer.pid = pid;
-        jsonPlayer.name = name;
-        jsonPlayer.meeple = controllerPlayer.getSumMeeples();
-        jsonPlayer.score = controllerPlayer.getScore();
+        return ok(Json.toJson(convertPlayer(controllerPlayer)));
+    }
 
-        return ok(Json.toJson(jsonPlayer));
+    public Result getAllPlayers() {
+        List<IPlayer> players = controller.getPlayers();
+        List<Player> jsonPlayers = new ArrayList<>();
+        for (IPlayer player : players) {
+            jsonPlayers.add(convertPlayer(player));
+        }
+
+        return ok(Json.toJson(jsonPlayers));
+    }
+
+    private Player convertPlayer(IPlayer player) {
+        Player jsonPlayer = new Player();
+        jsonPlayer.pid = playerIdMap.get(player);
+        jsonPlayer.name = player.getName();
+        jsonPlayer.meeple = player.getSumMeeples();
+        jsonPlayer.score = player.getScore();
+
+        return jsonPlayer;
     }
 
     public Result createGame() {
