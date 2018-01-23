@@ -134,6 +134,7 @@ function cardSuccessfullySet() {
     $('.tsColumn.active').off()
     $('.tsColumn').removeClass("active")
 
+    showCurrentCard()
     showMeeplePossibilities()
     updateTownsquare()
 }
