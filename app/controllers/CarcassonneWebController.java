@@ -35,15 +35,6 @@ public class CarcassonneWebController extends Controller {
         return ok(cyc.render(controller));
     }
 
-    public Result cycarcassonneJson(String cmd){
-        execCmd(cmd);
-        return json();
-    }
-
-    public Result json() {
-        return ok();
-    }
-
     public Result getGameStatus() {
         return ok(controller.getStatus().toString());
     }

@@ -9,8 +9,6 @@ GET     /rules                      controllers.PagesController.rules
 # Game pages
 GET     /cycarcassonne              controllers.CarcassonneWebController.cycarcassonne(cmd: String = "h")
 GET     /cycarcassonne/:cmd         controllers.CarcassonneWebController.cycarcassonne(cmd: String)
-POST    /cyc/json/:cmd              controllers.CarcassonneWebController.cycarcassonneJson(cmd: String)
-GET     /cyc/json                   controllers.CarcassonneWebController.json()
 
 GET     /cyc/gamestatus/            controllers.CarcassonneWebController.getGameStatus()
 GET     /cyc/addplayer/:name        controllers.CarcassonneWebController.addPlayer(name: String)
