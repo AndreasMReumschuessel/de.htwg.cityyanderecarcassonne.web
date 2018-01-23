@@ -1,6 +1,7 @@
 // Carcassonne Frontend Logic
 
 // Vue Handling
+// Vue Playerlist
 Vue.component('player-item', {
     props: ['player'],
     template: '<div class="player" :id="player.pid">{{ player.meeple }} : {{ player.name }} : {{ player.score }}</div>'
@@ -10,6 +11,28 @@ var playerlistVue = new Vue({
     el: '#playerlist',
     data: {
         playerList: []
+    }
+})
+
+// Vue Townsquare
+Vue.component('ts-row', {
+    props: ['row'],
+    template:   '<div class="row">' +
+                    '<div class="col-xs-12 tsRow">' +
+                        '<ts-column v-for="x in row" v-bind:column="x"></ts-column>' +
+                    '</div>' +
+                '</div>'
+})
+
+Vue.component('ts-column', {
+    props: ['column'],
+    template:   '<div class="tsColumn" :id="column"></div>'
+})
+
+var townSquareVue = new Vue({
+    el: '#townsquare',
+    data: {
+        array: []
     }
 })
 
@@ -28,6 +51,7 @@ if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
     checkGameStartable()
 } else {
     $('#addplayer').hide()
+    renderTownsquare()
 }
 
 if (gamestatus === "ROUND_START") {
@@ -73,6 +97,7 @@ $('#roundctrl').click(function(ev) {
             type: "GET",
             dataType: "text",
             success: function (result) {
+                renderTownsquare()
                 roundStarted()
             },
             error: function (jqxhr, errstatus, errmsg) {
@@ -166,6 +191,20 @@ function renderAllPlayers() {
             console.error("renderAllPlayers function: " + errstatus + " -> " + errmsg)
         }
     })
+}
+
+function renderTownsquare() {
+    var dimY = 15
+    var dimX = 15
+    var arrayY = []
+    for (var y = 0; y < dimY; y++) {
+        var arrayX = []
+        for (var x = 0; x < dimX; x++) {
+            arrayX.push(y + '_' + x)
+        }
+        arrayY.push(arrayX)
+    }
+    townSquareVue.array = arrayY
 }
 
 function showActivePlayer() {

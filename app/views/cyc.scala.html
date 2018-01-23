@@ -2,28 +2,13 @@
 
 @main("City Yandere Carcassonne") {
     <div class="game">
-        <div class="row gamecontent">
-            @if(controller.getTownsquare != null){
-                <div class="col-xs-12 col-md-10 townsquare">
-                    @for(row <- 0 until controller.getDimensionY) {
-                        <div class="row">
-                        <div class="col-xs-12 tsRow">
-                            @for(column <- 0 until controller.getDimensionX) {
-                                <div class="tsColumn" id="@({row + "_" + column})">
-                                    @if(controller.getTownsquare.getCard(column, row) != null) {
-                                        <img class="img-responsive" src="@routes.Assets.versioned("cyc-data/" + {
-                                            var cardClassName = controller.getTownsquare.getCard(column, row).getClass.getName
-                                            var cardName = cardClassName.substring(cardClassName.lastIndexOf('.') + 1)
-                                            cardName
-                                        } + ".png")" />
-                                    }
-                                </div>
-                            }
-                        </div>
-                        </div>
-                    }
+        <div class="gamecontent">
+                <div class="col-xs-12 col-md-10 townsquare" id="townsquare">
+                    <ts-row
+                        v-for="y in array"
+                        v-bind:row="y">
+                    </ts-row>
                 </div>
-            }
             <div class="col-xs-3 col-md-2 gameinfo">
                 <div class="currentcard">
                     Current card<br>
