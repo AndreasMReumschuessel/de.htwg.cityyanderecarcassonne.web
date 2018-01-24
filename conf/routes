@@ -9,13 +9,12 @@ GET     /rules                      controllers.PagesController.rules
 # Game pages
 GET     /cycarcassonne              controllers.CarcassonneWebController.cycarcassonne(cmd: String = "h")
 GET     /cycarcassonne/:cmd         controllers.CarcassonneWebController.cycarcassonne(cmd: String)
-POST    /cyc/json/:cmd              controllers.CarcassonneWebController.cycarcassonneJson(cmd: String)
-GET     /cyc/json                   controllers.CarcassonneWebController.json()
 
 GET     /cyc/gamestatus/            controllers.CarcassonneWebController.getGameStatus()
 GET     /cyc/addplayer/:name        controllers.CarcassonneWebController.addPlayer(name: String)
 GET     /cyc/creategame/            controllers.CarcassonneWebController.createGame()
 GET     /cyc/currentplayer/         controllers.CarcassonneWebController.getCurrentPlayerId()
+GET     /cyc/allplayers/            controllers.CarcassonneWebController.getAllPlayers()
 GET     /cyc/currentcard/           controllers.CarcassonneWebController.getCurrentCard()
 GET     /cyc/rotatecard/:direction  controllers.CarcassonneWebController.rotateCard(direction: String)
 GET     /cyc/cardcount/             controllers.CarcassonneWebController.getRemainingCards()

@@ -1,7 +1,45 @@
 // Carcassonne Frontend Logic
 
+// Vue Handling
+// Vue Playerlist
+Vue.component('player-item', {
+    props: ['player'],
+    template: '<div class="player" :id="player.pid">{{ player.meeple }} : {{ player.name }} : {{ player.score }}</div>'
+})
+
+var playerlistVue = new Vue({
+    el: '#playerlist',
+    data: {
+        playerList: []
+    }
+})
+
+// Vue Townsquare
+Vue.component('ts-row', {
+    props: ['row'],
+    template:   '<div class="row">' +
+                    '<div class="col-xs-12 tsRow">' +
+                        '<ts-column v-for="x in row" v-bind:column="x"></ts-column>' +
+                    '</div>' +
+                '</div>'
+})
+
+Vue.component('ts-column', {
+    props: ['column'],
+    template:   '<div class="tsColumn" :id="column"></div>'
+})
+
+var townSquareVue = new Vue({
+    el: '#townsquare',
+    data: {
+        array: []
+    }
+})
+
 // Get game status and do logic
 gamestatus = getGameStatus()
+
+initialRendering()
 
 if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
     $('.currentcard').hide()
@@ -13,6 +51,7 @@ if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
     checkGameStartable()
 } else {
     $('#addplayer').hide()
+    renderTownsquare()
 }
 
 if (gamestatus === "ROUND_START") {
@@ -38,26 +77,15 @@ $('#addplayerbtn').click(function (ev) {
         type: "GET",
         dataType: "json",
         success: function(result){
-            var player = createPlayerObject(name)
-            player.prepend(result.meeple + " : " + result.name + " : " + result.score)
-            $('.playerlist').append(player)
-
+            renderAllPlayers()
             $('#playername').prop("value", "")
             console.debug("AJAX succeeded! Player name: " + result.name)
-
-            checkGameStartable()
         },
         error: function(jqxhr, errstatus, errmsg) {
             console.error("Addplayer function: " + errstatus + " -> " + errmsg)
         }
     })
 });
-
-function createPlayerObject(name) {
-    return $(document.createElement('div'))
-            .addClass('player')
-            .attr("id", name);
-}
 
 // Start game if possible
 $('#roundctrl').click(function(ev) {
@@ -69,6 +97,7 @@ $('#roundctrl').click(function(ev) {
             type: "GET",
             dataType: "text",
             success: function (result) {
+                renderTownsquare()
                 roundStarted()
             },
             error: function (jqxhr, errstatus, errmsg) {
@@ -90,11 +119,11 @@ $('#roundctrl').click(function(ev) {
 });
 
 // Status functions
-function checkGameStartable() {
-    if ($('.player').length > 0) {
+function checkGameStartable(numPlayers) {
+    if (numPlayers > 0) {
         enable($('#roundctrl'))
     }
-    if ($('.player').length === 4) {
+    if (numPlayers > 3) {
         $('#addplayer').hide()
     }
 }
@@ -113,6 +142,7 @@ function roundStarted() {
     disable($('#roundctrl').html("Finish Round"))
 
     updateTownsquare()
+    renderAllPlayers()
     showActivePlayer()
     showCurrentCard()
     registerRotateCurrentCardListener()
@@ -129,6 +159,7 @@ function cardSuccessfullySet() {
     $('.tsColumn.active').off()
     $('.tsColumn').removeClass("active")
 
+    showCurrentCard()
     showMeeplePossibilities()
     updateTownsquare()
 }
@@ -138,6 +169,42 @@ function meepleSuccessfullySet() {
     $('.meeple.poss').remove()
 
     roundStarted()
+}
+
+function initialRendering() {
+    renderAllPlayers()
+}
+
+function renderAllPlayers() {
+    $.ajax({
+        url: "/cyc/allplayers/",
+        type: "GET",
+        dataType: "json",
+        success: function(playerlist){
+            playerlistVue.playerList = []
+            playerlist.forEach(function (player) {
+                playerlistVue.playerList.push({pid: player.pid, name: player.name, meeple: player.meeple, score: player.score})
+            })
+            checkGameStartable(playerlist.length)
+        },
+        error: function(jqxhr, errstatus, errmsg) {
+            console.error("renderAllPlayers function: " + errstatus + " -> " + errmsg)
+        }
+    })
+}
+
+function renderTownsquare() {
+    var dimY = 15
+    var dimX = 15
+    var arrayY = []
+    for (var y = 0; y < dimY; y++) {
+        var arrayX = []
+        for (var x = 0; x < dimX; x++) {
+            arrayX.push(y + '_' + x)
+        }
+        arrayY.push(arrayX)
+    }
+    townSquareVue.array = arrayY
 }
 
 function showActivePlayer() {
