@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtScalariform._
 
 import scalariform.formatter.preferences._
 
-name := "play-silhouette-seed"
+name := "cityyanderecarcassonne"
 
 version := "5.0.0"
 
