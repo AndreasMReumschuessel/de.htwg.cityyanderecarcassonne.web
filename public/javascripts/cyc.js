@@ -37,34 +37,38 @@ var townSquareVue = new Vue({
 })
 
 // Get game status and do logic
-gamestatus = getGameStatus()
-
 initialRendering()
 
-if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
-    $('.currentcard').hide()
-    $('.cardsleft').hide()
-    disable($('#rotleft'))
-    disable($('#rotright'))
-    disable($('#roundctrl'))
+gamestatus = getGameStatus()
+gameStatusUpdateActions(gamestatus)
 
-    checkGameStartable()
-} else {
-    $('#addplayer').hide()
-    renderTownsquare()
-}
+function gameStatusUpdateActions(gamestatus) {
+    if (gamestatus === "WELCOME" || gamestatus === "PLAYER_ADDED") {
+        $('.currentcard').hide()
+        $('.cardsleft').hide()
+        disable($('#rotleft'))
+        disable($('#rotright'))
+        disable($('#roundctrl'))
 
-if (gamestatus === "ROUND_START") {
-    roundStarted()
-} else if (gamestatus === "CARD_ROTATED" || gamestatus === "CARD_SET_FAIL") {
-    disable($('#roundctrl').html("Finish Round"))
+        checkGameStartable()
+        renderAllPlayers()
+    } else {
+        $('#addplayer').hide()
+        renderTownsquare()
+    }
 
-    updateTownsquare()
-    showCurrentCard()
-    registerRotateCurrentCardListener()
-    showCardPossibilities()
-} else if (gamestatus === "CARD_SET_SUCCESS") {
-    cardSuccessfullySet()
+    if (gamestatus === "ROUND_START") {
+        roundStarted()
+    } else if (gamestatus === "CARD_ROTATED" || gamestatus === "CARD_SET_FAIL") {
+        disable($('#roundctrl').html("Finish Round"))
+
+        updateTownsquare()
+        showCurrentCard()
+        registerRotateCurrentCardListener()
+        showCardPossibilities()
+    } else if (gamestatus === "CARD_SET_SUCCESS") {
+        cardSuccessfullySet()
+    }
 }
 
 // Add a new player
@@ -120,7 +124,7 @@ $('#roundctrl').click(function(ev) {
 
 // Status functions
 function checkGameStartable(numPlayers) {
-    if (numPlayers > 0) {
+    if (numPlayers > 0 && getGameStatus() === "PLAYER_ADDED") {
         enable($('#roundctrl'))
     }
     if (numPlayers > 3) {
@@ -173,6 +177,7 @@ function meepleSuccessfullySet() {
 
 function initialRendering() {
     renderAllPlayers()
+    openWebsocket()
 }
 
 function renderAllPlayers() {
@@ -414,6 +419,26 @@ function updateTownsquare() {
             console.error("getGameStatus function: " + errstatus + " -> " + errmsg)
         },
     })
+}
+
+// Websocket
+function openWebsocket() {
+    var socket = new WebSocket("ws://localhost:9000/cyc/websocket/")
+    socket.onopen = function() {
+        console.debug("Websocket opened")
+    }
+    socket.onmessage = function (msg) {
+        if (typeof msg.data === "string") {
+            gameStatusUpdateActions(msg.data)
+            console.debug("Websocket received: " + msg.data)
+        }
+    }
+    socket.onerror = function (ev) {
+        console.debug("Websocket error: " + ev)
+    }
+    socket.onclose = function () {
+        console.debug("Websocket closes")
+    }
 }
 
 // Helper functions
