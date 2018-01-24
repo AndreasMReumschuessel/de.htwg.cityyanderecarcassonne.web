@@ -423,7 +423,7 @@ function updateTownsquare() {
 
 // Websocket
 function openWebsocket() {
-    var socket = new WebSocket("ws://localhost:9000/cyc/websocket/")
+    var socket = new WebSocket("wss://de-htwg-cityyanderecarcassonne.herokuapp.com/cyc/websocket/")
     socket.onopen = function() {
         console.debug("Websocket opened")
     }
