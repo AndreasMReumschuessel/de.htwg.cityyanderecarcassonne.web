@@ -10,16 +10,19 @@ import de.htwg.cityyanderecarcassonne.model.IPlayer
 import de.htwg.cityyanderecarcassonne.model.IPosition
 import de.htwg.cityyanderecarcassonne.model.IRegion
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI
+import de.htwg.util.observer.{Event, IObserver}
 import models._
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.stream.Materializer
+import play.api.libs.streams.ActorFlow
 
 import scala.collection.mutable.ListBuffer
 
 @Singleton
-class CarcassonneWebController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit system: ActorSystem, mat: Materializer) extends AbstractController(cc) {
   private val carcassonne: Carcassonne = Carcassonne.getInstance(15, 15, false, true)
   private val controller: ICarcassonneController = carcassonne.getController
 
@@ -107,7 +110,6 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) extends Abstr
     } else {
       BadRequest("Unknown direction. Only \"left\" and \"right\" possible.")
     }
-    println(controller.cardOnHand().getLeftMiddle.getID)
     okGetCurrentCard
   }
 
@@ -243,5 +245,33 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) extends Abstr
   def finishRound()= Action {
     controller.finishRound()
     Ok("ok")
+  }
+
+  // Websocket
+  def socket = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef { out =>
+      println("New Client connected to Websocket!")
+      CYCWebSocketFactory.create(out)
+    }
+  }
+  object CYCWebSocketFactory {
+    def create(out: ActorRef) = {
+      Props(new CYCWebSocketActor(out))
+    }
+  }
+
+  class CYCWebSocketActor(out: ActorRef) extends Actor with IObserver {
+    controller.addObserver(this)
+
+    def receive = {
+      case msg: String =>
+        println("[CYCWebSocket] received: " + msg)
+    }
+
+    def notifyClient = {
+      out ! "" + controller.getStatus.toString
+    }
+
+    override def update(event: Event): Unit = notifyClient
   }
 }

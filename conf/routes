@@ -25,5 +25,8 @@ GET     /cyc/placemeeple/:selector  controllers.CarcassonneWebController.placeMe
 GET     /cyc/gettownsquare/         controllers.CarcassonneWebController.getTownsquare
 GET     /cyc/finishround/           controllers.CarcassonneWebController.finishRound
 
+# Websocket
+GET     /cyc/websocket/              controllers.CarcassonneWebController.socket
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
