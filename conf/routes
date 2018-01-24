@@ -23,6 +23,7 @@ POST        /password/change                 controllers.ChangePasswordControlle
 GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
 GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
 
+GET     /index                      controllers.PagesController.index
 GET     /rules                      controllers.PagesController.rules
 # Game pages
 GET     /cycarcassonne              controllers.CarcassonneWebController.cycarcassonne(cmd: String = "h")
