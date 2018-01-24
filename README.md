@@ -38,7 +38,5 @@ You can do point 2 and 3 in one step by just using `sbt run`. It will compile wh
 8. Open `http://localhost:9000` in your webbrowser. The first load will take some time since it is compiling.
 
 ### Future plans
-- Change from TUI to real fancy WUI
-- Basic HTML laylout
-- Adding CSS
-- Using Bootstrap
+- Implement Silhouette with SSO
+- Implement Chat with (maybe Polymer) and Websockets
