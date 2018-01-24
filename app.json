@@ -1,6 +1,6 @@
 {
-  "name": "play-silhouette-seed",
-  "description": "Seed project to show how Silhouette can be implemented into a Play Framework application.",
+  "name": "cityyanderecarcassonne",
+  "description": "Web version of City Yandere Carcassonne using the Silhouette framework.",
   "keywords": [
     "Play",
     "Silhouette"
