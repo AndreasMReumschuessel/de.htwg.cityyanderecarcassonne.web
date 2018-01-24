@@ -1,3 +1,7 @@
+@import "for";
+
+@import "colours";
+
 body {
   background-color: #99ccff;
   padding-top: 70px;
@@ -52,18 +56,116 @@ a {
 .tsColumn, .tsRow {
   img {
     padding: 0;
+    z-index: 1;
   }
 }
 
 .tsColumn {
   display: inline-block;
   background-color: lightgray;
+  position: relative;
 
   &.active {
     transition: background-color 300ms;
-    background-color: yellow;
+    background-color: @card-poss-colour;
     &:hover {
-      background-color: orange;
+      background-color: @card-poss-hover;
+    }
+  }
+
+  .meeplecontainer {
+    height: 5vw;
+    width: 5vw;
+    position: absolute;
+    left: 0vw;
+    top: 0vw;
+    z-index: 1;
+  }
+
+  .meeple {
+    position: absolute;
+    z-index: 2;
+
+    width: 0.8vw;
+    height: 0.8vw;
+    border: solid 0.2vw;
+    border-radius: 100%;
+
+    &.poss {
+      transition: background-color 300ms;
+      border: @meeple-poss-colour;
+      background-color: @meeple-poss-colour;
+      &:hover {
+        border: @meeple-poss-hover;
+        background-color: @meeple-poss-hover;
+      }
+    }
+
+    &.pid_0 {
+      border: @player-1-colour;
+      background-color: @player-1-colour;
+    }
+
+    &.pid_1 {
+      border: @player-2-colour;
+      background-color: @player-2-colour;
+    }
+
+    &.pid_2 {
+      border: @player-3-colour;
+      background-color: @player-3-colour;
+    }
+
+    &.pid_3 {
+      border: @player-4-colour;
+      background-color: @player-4-colour;
+    }
+  }
+
+  @meeple-posL-classes: LT, LM, LB;
+  .meeple {
+    .for(@meeple-posL-classes); .-each(@name) {
+      &.@{name} {
+        left: 0.1vw;
+        top: 0.85vw+((@i - 1)*1.25);
+      }
+    }
+  }
+
+  @meeple-posB-classes: BL, BM, BR;
+  .meeple {
+    .for(@meeple-posB-classes); .-each(@name) {
+      &.@{name} {
+        left: 0.85vw+((@i - 1)*1.25);
+        top: 4.2vw;
+      }
+    }
+  }
+
+  .meeple {
+    &.C {
+      left: 2.1vw;
+      top: 2.1vw;
+    }
+  }
+
+  @meeple-posT-classes: TL, TM, TR;
+  .meeple {
+    .for(@meeple-posT-classes); .-each(@name) {
+      &.@{name} {
+        left: 0.85vw+((@i - 1)*1.25);
+        top: 0.1vw;
+      }
+    }
+  }
+
+  @meeple-posR-classes: RT, RM, RB;
+  .meeple {
+    .for(@meeple-posR-classes); .-each(@name) {
+      &.@{name} {
+        left: 4.2vw;
+        top: 0.85vw+((@i - 1)*1.25);
+      }
     }
   }
 }
