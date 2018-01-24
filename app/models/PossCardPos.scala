@@ -1,6 +1,6 @@
 package models
 
-case class PossCardPos (
-                         selector: String,
-                         position: String
-                       )
+case class PossCardPos(
+  selector: String,
+  position: String
+)

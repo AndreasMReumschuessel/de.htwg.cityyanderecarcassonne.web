@@ -1,4 +1,9 @@
-@(controller: de.htwg.cityyanderecarcassonne.controller.ICarcassonneController)
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+
+@(controller: de.htwg.cityyanderecarcassonne.controller.ICarcassonneController)(implicit request: RequestHeader, messages: Messages, assets: AssetsFinder, webJarsUtil: WebJarsUtil)
 
 @main("City Yandere Carcassonne") {
     <div class="game">
@@ -59,6 +64,7 @@
         </div>
     </div>
 
-    <script src="@routes.Assets.versioned("javascripts/cyc.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.versioned("javascripts/jQueryRotate.js")" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="@assets.path("javascripts/cyc.js")" type="text/javascript"></script>
+    <script src="@assets.path("javascripts/jQueryRotate.js")" type="text/javascript"></script>
 }

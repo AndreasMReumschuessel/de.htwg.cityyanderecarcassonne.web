@@ -1,19 +1,24 @@
-@(message: String)
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+
+@(message: String)(implicit request: RequestHeader, messages: Messages, assets: AssetsFinder, webJarsUtil: WebJarsUtil)
 
     @main("City Yandere Carcassonne") {
 
         <div class="center">
             <h1>@message</h1>
             <div class="media">
-                <img class="img-responsive center-block" src="@routes.Assets.versioned("images/wow.gif")" border="0" alt="wow" />
+                <img class="img-responsive center-block" src="@assets.path("images/wow.gif")" border="0" alt="wow" />
             </div>
             <table cellpadding="10">
                 <tr>
                     <td>
-                        <a href="@routes.CarcassonneWebController.cycarcassonne("h")"><img src="@routes.Assets.versioned("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
+                        <a href=""><img src="@assets.path("images/arrow.gif")" border="0" alt="animiertes-pfeile-bild-0032" /></a>
                     </td>
                     <td>
-                        <a id="s1" href="@routes.CarcassonneWebController.cycarcassonne("h")"><b>Play City Yandere Carcassonne!</b></a>
+                        <a id="s1" href=""><b>Play City Yandere Carcassonne!</b></a>
                     </td>
                 </tr>
                 <tr>
@@ -21,14 +26,14 @@
                         <!-- HTML Ninja -->
                     </td>
                     <td>
-                        <a id="s2" href="@routes.PagesController.rules">Game rules</a>
+                        <a id="s2" href="">Game rules</a>
                     </td>
                 </tr>
             </table>
             <div class="row">
                 @for(i <- 0 until 4) {
                     <div class="col-xs-3">
-                        <img class="img-responsive center-block" src="@routes.Assets.versioned("images/cat.gif")"  border="0" alt="running cat" />
+                        <img class="img-responsive center-block" src="@assets.path("images/cat.gif")"  border="0" alt="running cat" />
                     </div>
                 }
             </div>

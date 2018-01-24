@@ -1,7 +1,7 @@
 package controllers
 
 import collection.JavaConverters._
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 import de.htwg.cityyanderecarcassonne.Carcassonne
 import de.htwg.cityyanderecarcassonne.controller.ICarcassonneController
@@ -10,19 +10,26 @@ import de.htwg.cityyanderecarcassonne.model.IPlayer
 import de.htwg.cityyanderecarcassonne.model.IPosition
 import de.htwg.cityyanderecarcassonne.model.IRegion
 import de.htwg.cityyanderecarcassonne.view.tui.TextUI
-import de.htwg.util.observer.{Event, IObserver}
+import de.htwg.util.observer.{ Event, IObserver }
 import models._
-import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
+import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents, WebSocket }
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import akka.stream.Materializer
+import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import org.webjars.play.WebJarsUtil
+import play.api.i18n.I18nSupport
 import play.api.libs.streams.ActorFlow
+import utils.auth.DefaultEnv
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 
 @Singleton
-class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit system: ActorSystem, mat: Materializer) extends AbstractController(cc) {
+class CarcassonneWebController @Inject() (cc: ControllerComponents, silhouette: Silhouette[DefaultEnv])(implicit webJarsUtil: WebJarsUtil, assets: AssetsFinder, system: ActorSystem, mat: Materializer)
+  extends AbstractController(cc) with I18nSupport {
   private val carcassonne: Carcassonne = Carcassonne.getInstance(15, 15, false, true)
   private val controller: ICarcassonneController = carcassonne.getController
 
@@ -41,9 +48,10 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit sys
     tui.processInput(cmd)
   }
 
-  def cycarcassonne(cmd: String) = Action {
+  def cycarcassonne(cmd: String) = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
     execCmd(cmd)
-    Ok(views.html.cyc.render(controller))
+    Future.successful(Ok(views.html.cyc(controller)))
+
   }
 
   def getGameStatus = Action {
@@ -171,7 +179,7 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit sys
 
       if (key == card.getRightTop) tmpTsCardMap += ("RT" -> value)
       if (key == card.getRightMiddle) tmpTsCardMap += ("RM" -> value)
-      if (key == card.getRightBelow) tmpTsCardMap += ("RB" ->  value)
+      if (key == card.getRightBelow) tmpTsCardMap += ("RB" -> value)
     }
 
     val tscard: TSCard = new TSCard(
@@ -217,7 +225,7 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit sys
         if (ctsCard.getBelowLeft.getPlayer != null)
           tmpTsCardMap += ("BL" -> playerIdMap(ctsCard.getBelowLeft.getPlayer))
         if (ctsCard.getBelowMiddle.getPlayer != null)
-          tmpTsCardMap += ("BM" ->playerIdMap(ctsCard.getBelowMiddle.getPlayer))
+          tmpTsCardMap += ("BM" -> playerIdMap(ctsCard.getBelowMiddle.getPlayer))
         if (ctsCard.getBelowRight.getPlayer != null)
           tmpTsCardMap += ("BR" -> playerIdMap(ctsCard.getBelowRight.getPlayer))
 
@@ -242,7 +250,7 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit sys
     Ok(Json.toJson(ts))
   }
 
-  def finishRound()= Action {
+  def finishRound() = Action {
     controller.finishRound()
     Ok("ok")
   }
@@ -268,7 +276,7 @@ class CarcassonneWebController @Inject()(cc: ControllerComponents) (implicit sys
         println("[CYCWebSocket] received: " + msg)
     }
 
-    def notifyClient = {
+    def notifyClient() = {
       out ! "" + controller.getStatus.toString
     }
 

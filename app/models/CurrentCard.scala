@@ -1,6 +1,6 @@
 package models
 
-case class CurrentCard (
-                         cardname: String,
-                         orientation: Int
-                       )
+case class CurrentCard(
+  cardname: String,
+  orientation: Int
+)
