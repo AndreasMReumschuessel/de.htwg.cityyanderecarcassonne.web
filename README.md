@@ -34,9 +34,11 @@ You can do point 2 and 3 in one step by just using `sbt run`. It will compile wh
 4. Create run configuration with "Run -> Edit Configurations...".
 5. Add "SBT Task".
 6. Enter `run` in the "Tasks:" text input.
-7. Run you configuration.
+7. Run your configuration.
 8. Open `http://localhost:9000` in your webbrowser. The first load will take some time since it is compiling.
 
 ### Future plans
-- Implement Silhouette with SSO
+- CI and automatic deployment to Heroku
+- Merge Silhouette with SSO branch.
 - Implement Chat with (maybe Polymer) and Websockets
+- Develop a matchmaking page
